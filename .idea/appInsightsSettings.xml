@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="ggv.ayush.myapplication" />
+                  <option name="mobileSdkAppId" value="1:698635038167:android:74f16b799015199becef92" />
+                  <option name="projectId" value="ggubazaar" />
+                  <option name="projectNumber" value="698635038167" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "698635038167",
+    "project_id": "ggubazaar",
+    "storage_bucket": "ggubazaar.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:698635038167:android:74f16b799015199becef92",
+        "android_client_info": {
+          "package_name": "ggv.ayush.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWQ-wYi8ntuj7QLLzGTqP9dGwnquMi9M0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

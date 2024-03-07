@@ -201,11 +201,11 @@ private fun GradientButtonReset(
 @Composable
 fun ResetEmailID() {
     val keyboardController = LocalSoftwareKeyboardController.current
-    var text by rememberSaveable { mutableStateOf("") }
+    var resetemailId by rememberSaveable { mutableStateOf("") }
 
     OutlinedTextField(
-        value = text,
-        onValueChange = { text = it },
+        value = resetemailId,
+        onValueChange = { resetemailId = it },
         shape = RoundedCornerShape(topEnd =12.dp, bottomStart =12.dp),
         label = {
             Text("Enter Registered Email",

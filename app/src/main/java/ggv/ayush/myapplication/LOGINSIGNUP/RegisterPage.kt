@@ -110,14 +110,7 @@ fun RegisterPage(navController: NavController) {
 
 
                 Spacer(modifier = Modifier.padding(10.dp))
-               /* Button(
-                    onClick = {},
-                    modifier = Modifier
-                        .fillMaxWidth(0.8f)
-                        .height(50.dp)
-                ) {
-                    Text(text = "Login", fontSize = 20.sp)
-                }*/
+
                 GradientButton(
                     gradientColors = gradientColor,
                     cornerRadius = cornerRadius,
@@ -224,11 +217,11 @@ private fun GradientButton(
 @Composable
 fun RegisterName() {
     val keyboardController = LocalSoftwareKeyboardController.current
-    var text by rememberSaveable { mutableStateOf("") }
+    var userName by rememberSaveable { mutableStateOf("") }
 
     OutlinedTextField(
-        value = text,
-        onValueChange = { text = it },
+        value = userName,
+        onValueChange = { userName = it },
         shape = RoundedCornerShape(topEnd =12.dp, bottomStart =12.dp),
         label = {
             Text("Name",
@@ -261,11 +254,11 @@ fun RegisterName() {
 @Composable
 fun RegisterPhone() {
     val keyboardController = LocalSoftwareKeyboardController.current
-    var text by rememberSaveable { mutableStateOf("") }
+    var userPhone by rememberSaveable { mutableStateOf("") }
 
     OutlinedTextField(
-        value = text,
-        onValueChange = { text = it },
+        value = userPhone,
+        onValueChange = { userPhone = it },
         shape = RoundedCornerShape(topEnd =12.dp, bottomStart =12.dp),
         label = {
             Text("Phone",
@@ -298,11 +291,11 @@ fun RegisterPhone() {
 @Composable
 fun RegisterEmail() {
     val keyboardController = LocalSoftwareKeyboardController.current
-    var text by rememberSaveable { mutableStateOf("") }
+    var userEmail by rememberSaveable { mutableStateOf("") }
 
     OutlinedTextField(
-        value = text,
-        onValueChange = { text = it },
+        value = userEmail,
+        onValueChange = { userEmail = it },
         shape = RoundedCornerShape(topEnd =12.dp, bottomStart =12.dp),
         label = {
             Text("Email Address",
@@ -379,11 +372,11 @@ fun RegisterPassword() {
 @Composable
 fun RegisterPasswordConfirm() {
     val keyboardController = LocalSoftwareKeyboardController.current
-    var password by rememberSaveable { mutableStateOf("") }
+    var userPassword by rememberSaveable { mutableStateOf("") }
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
     OutlinedTextField(
-        value = password,
-        onValueChange = { password = it },
+        value = userPassword,
+        onValueChange = { userPassword = it },
         shape = RoundedCornerShape(topEnd =12.dp, bottomStart =12.dp),
         label = {
             Text("Confirm Password",

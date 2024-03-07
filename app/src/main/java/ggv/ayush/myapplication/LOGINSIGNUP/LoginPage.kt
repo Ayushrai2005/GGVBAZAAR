@@ -101,20 +101,21 @@ fun LoginPage(navController: NavController) {
 
 
                 Spacer(modifier = Modifier.padding(10.dp))
-               Button(
+               /*Button(
                     onClick = {},
                     modifier = Modifier
                         .fillMaxWidth(0.8f)
                         .height(50.dp)
                 ) {
                     Text(text = "Login", fontSize = 20.sp)
-                }
-//                GradientButton(
-//                    gradientColors = gradientColor,
-//                    cornerRadius = cornerRadius,
-//                    nameButton = "Login",
-//                    roundedCornerShape = RoundedCornerShape(topStart = 30.dp,bottomEnd = 30.dp)
-//                )
+                }*/
+
+                GradientButton(
+                    gradientColors = gradientColor,
+                    cornerRadius = cornerRadius,
+                    nameButton = "Login",
+                    roundedCornerShape = RoundedCornerShape(topStart = 30.dp,bottomEnd = 30.dp)
+                )
 
                 Spacer(modifier = Modifier.padding(10.dp))
                 androidx.compose.material3.TextButton(onClick = {
@@ -215,11 +216,11 @@ private fun GradientButton(
 @Composable
 fun SimpleOutlinedTextFieldSample() {
     val keyboardController = LocalSoftwareKeyboardController.current
-    var text by rememberSaveable { mutableStateOf("") }
+    var userName by rememberSaveable { mutableStateOf("") }
 
     OutlinedTextField(
-        value = text,
-        onValueChange = { text = it },
+        value = userName,
+        onValueChange = { userName = it },
         shape = RoundedCornerShape(topEnd =12.dp, bottomStart =12.dp),
         label = {
             Text("Name or Email Address",
@@ -251,11 +252,11 @@ fun SimpleOutlinedTextFieldSample() {
 @Composable
 fun SimpleOutlinedPasswordTextField() {
     val keyboardController = LocalSoftwareKeyboardController.current
-    var password by rememberSaveable { mutableStateOf("") }
+    var userPassword by rememberSaveable { mutableStateOf("") }
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
     OutlinedTextField(
-        value = password,
-        onValueChange = { password = it },
+        value = userPassword,
+        onValueChange = { userPassword = it },
         shape = RoundedCornerShape(topEnd =12.dp, bottomStart =12.dp),
         label = {
             Text("Enter Password",
