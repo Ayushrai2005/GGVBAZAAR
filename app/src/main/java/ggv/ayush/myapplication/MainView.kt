@@ -23,5 +23,10 @@ fun MainView(){
         composable("reset_page", content = { ResetPage(navController = navController) })
 
 
+        composable(Screen.BottomScreen.Home.bRoute){
+            HomePage(navController)
+        }
+
+
     })
 }

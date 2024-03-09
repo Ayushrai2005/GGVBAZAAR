@@ -1,6 +1,7 @@
 package ggv.ayush.myapplication.LOGINSIGNUP
 
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -24,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
@@ -35,10 +37,19 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import ggv.ayush.myapplication.R
 
+
+private lateinit var auth: FirebaseAuth
 @Composable
 fun RegisterPage(navController: NavController) {
+
+    var userEmail by rememberSaveable { mutableStateOf("") }
+    var userPassword by rememberSaveable { mutableStateOf("") }
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -96,10 +107,10 @@ fun RegisterPage(navController: NavController) {
                 RegisterPhone()
 
                 Spacer(modifier = Modifier.padding(3.dp))
-                RegisterEmail()
+                RegisterEmail(userEmail = userEmail, onUserEmailChange = { userEmail = it })
 
                 Spacer(modifier = Modifier.padding(3.dp))
-                RegisterPassword()
+                RegisterPassword(userPassword = userPassword , onUserPasswordChange = { userPassword = it})
 
                 Spacer(modifier = Modifier.padding(3.dp))
                 RegisterPasswordConfirm()
@@ -115,7 +126,11 @@ fun RegisterPage(navController: NavController) {
                     gradientColors = gradientColor,
                     cornerRadius = cornerRadius,
                     nameButton = "Create An Account",
-                    roundedCornerShape = RoundedCornerShape(topStart = 30.dp,bottomEnd = 30.dp)
+                    roundedCornerShape = RoundedCornerShape(topStart = 30.dp,bottomEnd = 30.dp),
+                    navController = navController,
+
+                    userEmail = userEmail,
+                    userPassword = userPassword
                 )
 
                 Spacer(modifier = Modifier.padding(10.dp))
@@ -169,15 +184,31 @@ private fun GradientButton(
     gradientColors: List<Color>,
     cornerRadius: Dp,
     nameButton: String,
-    roundedCornerShape: RoundedCornerShape
-) {
+    roundedCornerShape: RoundedCornerShape,
+    navController : NavController,
 
+    userEmail: String ,
+    userPassword : String
+) {
+    auth = Firebase.auth
+    val context = LocalContext.current
     androidx.compose.material3.Button(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 32.dp, end = 32.dp),
         onClick = {
-            //your code
+            auth.createUserWithEmailAndPassword(userEmail, userPassword)
+                .addOnCompleteListener{ task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        val user = auth.currentUser
+                        Toast.makeText(context, "Registered Successfully", Toast.LENGTH_SHORT).show()
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Toast.makeText(context, "Registartion failed", Toast.LENGTH_SHORT).show()
+
+                    }
+                }
         },
 
         contentPadding = PaddingValues(),
@@ -289,13 +320,12 @@ fun RegisterPhone() {
 //email id
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun RegisterEmail() {
+fun RegisterEmail(userEmail: String, onUserEmailChange: (String) -> Unit) {
     val keyboardController = LocalSoftwareKeyboardController.current
-    var userEmail by rememberSaveable { mutableStateOf("") }
 
     OutlinedTextField(
         value = userEmail,
-        onValueChange = { userEmail = it },
+        onValueChange = { onUserEmailChange(it) },
         shape = RoundedCornerShape(topEnd =12.dp, bottomStart =12.dp),
         label = {
             Text("Email Address",
@@ -325,13 +355,12 @@ fun RegisterEmail() {
 //password
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun RegisterPassword() {
+fun RegisterPassword(userPassword: String, onUserPasswordChange: (String) -> Unit) {
     val keyboardController = LocalSoftwareKeyboardController.current
-    var password by rememberSaveable { mutableStateOf("") }
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
     OutlinedTextField(
-        value = password,
-        onValueChange = { password = it },
+        value = userPassword,
+        onValueChange = { onUserPasswordChange(it) },
         shape = RoundedCornerShape(topEnd =12.dp, bottomStart =12.dp),
         label = {
             Text("Enter Password",
