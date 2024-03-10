@@ -211,7 +211,7 @@ private fun GradientButton(
                         // Sign in success, update UI with the signed-in user's information
                         val user = auth.currentUser
                         Toast.makeText(context, "Signed in Successfull", Toast.LENGTH_SHORT).show()
-                        navController.navigate("Home_page")
+                        navController.navigate("home")
                     } else {
                         // If sign in fails, display a message to the user.
                         Toast.makeText(context, "Signed in Failed", Toast.LENGTH_SHORT).show()
