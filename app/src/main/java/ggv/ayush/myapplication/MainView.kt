@@ -1,13 +1,18 @@
 package ggv.ayush.myapplication
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Button
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.icons.Icons
@@ -38,14 +43,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import ggv.ayush.myapplication.DrawerScreens.LogoutDialog
 import ggv.ayush.myapplication.LOGINSIGNUP.LoginPage
 import ggv.ayush.myapplication.LOGINSIGNUP.RegisterPage
 import ggv.ayush.myapplication.LOGINSIGNUP.ResetPage
+import ggv.ayush.myapplication.Screen.BottomScreen.Home.screensInBottom
 import ggv.ayush.myapplication.Screen.BottomScreen.Home.screensInDrawer
 import ggv.ayush.myapplication.Screen.BottomScreen.Home.title
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainView( navController : NavController){
@@ -73,8 +81,43 @@ fun MainView( navController : NavController){
 
     }
 
-    
+    val dialogOpen = remember{
+        mutableStateOf(false)
+    }
+
+    val bottomBar : @Composable () -> Unit = {
+        if (currentScreen is Screen.DrawerScreen || currentScreen == Screen.BottomScreen.Home){
+            BottomNavigation(
+                Modifier.wrapContentSize()
+            ) {
+                screensInBottom.forEach{ item ->
+                    val isSelected = currentRoute == item.bRoute
+                    Log.d(
+                        "Navigation",
+                        "Item: ${item.bTitle}, Current Route: $currentRoute, Is Selected: $isSelected"
+                    )
+                    val tint = if (isSelected) Color.White else Color.Black
+
+                    BottomNavigationItem(
+                        selected = currentRoute == item.bRoute,
+                        onClick = { navController.navigate(item.bRoute)
+                            title.value = item.bTitle
+                        },
+                        icon = { Icon(contentDescription = item.bTitle , painter = painterResource(id = item.icon))
+                        },
+                        label = { Text(text = item.bTitle) },
+                        selectedContentColor = Color.White,
+                        unselectedContentColor = Color.Black
+                    )
+
+                }
+            }
+        }
+
+    }
+
     Scaffold(
+        bottomBar = bottomBar,
         topBar = {
             TopAppBar(title = { Text(text = "Home")},
                 navigationIcon = { IconButton(onClick = {
@@ -100,7 +143,8 @@ fun MainView( navController : NavController){
                             scaffoldState.drawerState.close()
                         }
                         if(item.dRoute == "logout"){
-                            //Open dialog
+                            //Open dialog to confirm logout
+                            dialogOpen.value = true
                         }else{
                             navController.navigate(item.dRoute)
                             title.value= item.title
@@ -112,12 +156,7 @@ fun MainView( navController : NavController){
         }
         
     ) {
-        Text(text = "Text" , modifier = Modifier.padding(it))
-
-        Button(onClick = {navController.navigate("Login_page")}) {
-            androidx.compose.material.Text(text = "Sign Out")
-
-        }
+        LogoutDialog(dialogOpen = dialogOpen)
 
     }
 

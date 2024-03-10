@@ -9,7 +9,30 @@ sealed class Screen(val title: String, val route: String) {
         val bRoute: String,
         @DrawableRes val icon: Int
     ) : Screen(bTitle, bRoute) {
-        object Home : BottomScreen("Home", "home", R.drawable.baseline_home_24)
+
+        object Home : BottomScreen(
+            "Home",
+            "home",
+            R.drawable.baseline_home_24
+        )
+
+        object Buy : BottomScreen(
+            "Buy",
+            "buy",
+            R.drawable.baseline_home_24
+        )
+
+        object Rent : BottomScreen(
+            "Rent",
+            "rent",
+            R.drawable.baseline_home_24
+        )
+
+        object Cart : BottomScreen(
+            "Cart",
+            "cart",
+            R.drawable.ic_outlined_shopping_cart_24
+        )
 
     }
 
@@ -36,6 +59,14 @@ sealed class Screen(val title: String, val route: String) {
             R.drawable.ic_filled_logout
         )
 
+        object SellOrRent:DrawerScreen(
+            "Sell / Rent",
+            "sellrent",
+            R.drawable.ic_filled_logout
+        )
+
+
+
 
 
     }
@@ -45,6 +76,15 @@ sealed class Screen(val title: String, val route: String) {
         Screen.DrawerScreen.Orders,
         Screen.DrawerScreen.Logout
     )
+
+    val screensInBottom = listOf(
+        Screen.BottomScreen.Home,
+        Screen.BottomScreen.Buy,
+        Screen.BottomScreen.Rent,
+        Screen.BottomScreen.Cart
+        )
+
+
 
 
 
