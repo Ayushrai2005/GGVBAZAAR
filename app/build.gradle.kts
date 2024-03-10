@@ -14,8 +14,6 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-        vectorDrawables.useSupportLibrary = true
-
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -81,6 +79,5 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-    implementation("com.android.support:appcompat-v7:23.2.0")
 
 }//Compose Navigation Dependency

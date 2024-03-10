@@ -21,25 +21,32 @@ sealed class Screen(val title: String, val route: String) {
         object Account : DrawerScreen(
             "Account",
             "account",
-            R.drawable.person_account_drawable
+            R.drawable.baseline_account_box_24
         )
 
         object Orders : DrawerScreen(
             "Orders",
             "orders",
-            R.drawable.orders_account_drawable
-
+            R.drawable.ic_filled_library_books_24
         )
 
         object Logout:DrawerScreen(
             "Logout",
             "logout",
-            R.drawable.ic_filled_logout_24
+            R.drawable.ic_filled_logout
         )
 
 
 
     }
 
+    val screensInDrawer = listOf(
+        Screen.DrawerScreen.Account,
+        Screen.DrawerScreen.Orders,
+        Screen.DrawerScreen.Logout
+    )
+
+
 
 }
+

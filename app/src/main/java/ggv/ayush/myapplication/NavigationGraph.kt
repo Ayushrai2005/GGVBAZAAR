@@ -13,7 +13,7 @@ import androidx.navigation.compose.NavHost
 fun NavigationGraph() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "login_page", builder = {
+    NavHost(navController = navController, startDestination = Screen.BottomScreen.Home.route, builder = {
 
 
         composable("login_page", content = { LoginPage(navController = navController) })
@@ -24,6 +24,12 @@ fun NavigationGraph() {
 
 
         composable(Screen.BottomScreen.Home.bRoute) {
+            MainView(navController)
+        }
+        composable(Screen.DrawerScreen.Account.route){
+            MainView(navController)
+        }
+        composable(Screen.DrawerScreen.Orders.route){
             MainView(navController)
         }
 
