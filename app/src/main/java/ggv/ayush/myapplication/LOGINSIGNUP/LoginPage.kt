@@ -20,8 +20,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-
-
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,7 +43,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import ggv.ayush.myapplication.R
-import ggv.ayush.myapplication.Screen
 
 
 private lateinit var auth: FirebaseAuth
@@ -211,7 +208,7 @@ private fun GradientButton(
                         // Sign in success, update UI with the signed-in user's information
                         val user = auth.currentUser
                         Toast.makeText(context, "Signed in Successfull", Toast.LENGTH_SHORT).show()
-                        navController.navigate(Screen.BottomScreen.Home.route)
+                        navController.navigate("Main_View")
                     } else {
                         // If sign in fails, display a message to the user.
                         Toast.makeText(context, "Signed in Failed", Toast.LENGTH_SHORT).show()

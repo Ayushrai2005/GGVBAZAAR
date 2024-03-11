@@ -34,6 +34,11 @@ sealed class Screen(val title: String, val route: String) {
             R.drawable.ic_outlined_shopping_cart_24
         )
 
+        object Browse: BottomScreen(
+            "Browse", "browse",
+            R.drawable.baseline_apps_24
+        )
+
     }
 
     sealed class DrawerScreen(
@@ -64,6 +69,17 @@ sealed class Screen(val title: String, val route: String) {
             "sellrent",
             R.drawable.ic_filled_logout
         )
+        object Subscription: DrawerScreen(
+            "Subscription",
+            "subscribe",
+            R.drawable.ic_subscribe
+        )
+
+        object AddAccount: DrawerScreen(
+            "Add Account",
+            "add_account",
+            R.drawable.baseline_person_add_alt_1_24
+        )
 
 
 
@@ -74,7 +90,8 @@ sealed class Screen(val title: String, val route: String) {
     val screensInDrawer = listOf(
         Screen.DrawerScreen.Account,
         Screen.DrawerScreen.Orders,
-        Screen.DrawerScreen.Logout
+        Screen.DrawerScreen.Logout,
+        Screen.DrawerScreen.SellOrRent
     )
 
     val screensInBottom = listOf(

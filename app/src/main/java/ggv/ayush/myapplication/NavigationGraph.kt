@@ -1,23 +1,26 @@
 package ggv.ayush.myapplication
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ggv.ayush.myapplication.LOGINSIGNUP.LoginPage
 import ggv.ayush.myapplication.LOGINSIGNUP.RegisterPage
 import ggv.ayush.myapplication.LOGINSIGNUP.ResetPage
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import ggv.ayush.myapplication.BottomScreens.Browse
 import ggv.ayush.myapplication.BottomScreens.Home
 import ggv.ayush.myapplication.BottomScreens.Library
+import ggv.ayush.myapplication.DrawerScreens.AccountView
 
 
 @Composable
 fun NavigationGraph() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController as NavHostController, "MainView") {
+    NavHost(navController = navController, "login_page") {
 
 
         composable("login_page", content = { LoginPage(navController = navController) })
@@ -27,9 +30,18 @@ fun NavigationGraph() {
         composable("reset_page", content = { ResetPage(navController = navController) })
 
 
-        composable("MainView" , content = { MainView(navController = navController)})
-        
+        composable("Main_View"){
+            MainView(navController = navController)
+        }
 
+
+
+        //Drawer Items
+        composable(Screen.DrawerScreen.Account.route){
+            AccountView()
+        }
+
+        //Bottom Bar Items
         composable(Screen.BottomScreen.Home.bRoute) {
             Home()
         }
@@ -41,13 +53,6 @@ fun NavigationGraph() {
         }
         composable(Screen.BottomScreen.Cart.bRoute) {
            Browse()
-        }
-        
-        composable(Screen.DrawerScreen.Account.route){
-            MainView(navController)
-        }
-        composable(Screen.DrawerScreen.Orders.route){
-            MainView(navController)
         }
 
 
