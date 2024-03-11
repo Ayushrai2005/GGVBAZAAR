@@ -107,6 +107,8 @@ fun MainView(navController: NavHostController) {
     val roundedCornerRadius = if (isSheetFullScreen) 0.dp else 12.dp
 
 
+
+    //Bottom Bar
     val bottomBar: @Composable () -> Unit = {
         if (currentScreen is Screen.DrawerScreen || currentScreen == Screen.BottomScreen.Home) {
             BottomNavigation(Modifier.wrapContentSize()) {
@@ -140,9 +142,25 @@ fun MainView(navController: NavHostController) {
             }
         }
     }
+
+    //Top app bar
     val AppTopBar: @Composable () -> Unit ={
         TopAppBar(title = {
             Text(title.value)
+            },
+            actions = {
+                IconButton(
+                    onClick = {
+                        scope.launch {
+                            if (modalSheetState.isVisible)
+                                modalSheetState.hide()
+                            else
+                                modalSheetState.show()
+                        }
+                    }
+                ) {
+                    Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
+                }
             },
             navigationIcon = {
                 IconButton(onClick = {
@@ -161,14 +179,29 @@ fun MainView(navController: NavHostController) {
 
     }
 
+
+    ModalBottomSheetLayout(
+        sheetState = modalSheetState,
+        sheetShape = RoundedCornerShape(
+            topStart = roundedCornerRadius,
+            topEnd = roundedCornerRadius),
+        sheetContent = {
+            MoreBottomSheet(modifier = modifier)
+        }) {
+
+        //Scaffold MAIN
         Scaffold(
-        bottomBar = bottomBar,
+            bottomBar = bottomBar,
             topBar = {
                 AppTopBar()
             }
 
-    ) {
-            BottomNavGraph(navController = navController )
+        ) {
+            BottomNavGraph(navController = navController, pd = it)
+            LogoutDialog(dialogOpen = dialogOpen)
+
+        }
+
 
     }
 
@@ -219,7 +252,9 @@ fun MoreBottomSheet(modifier: Modifier) {
                     painter = painterResource(id = R.drawable.baseline_settings_24),
                     contentDescription = "Settings"
                 )
-                Text(text = "Settings", fontSize = 20.sp, color = Color.White)
+                Text(text = "Settings",
+                    fontSize = 20.sp,
+                    color = Color.White)
             }
             Row(modifier = modifier.padding(16.dp)) {
                 androidx.compose.material.Icon(
