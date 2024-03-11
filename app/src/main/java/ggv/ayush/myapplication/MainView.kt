@@ -179,7 +179,6 @@ fun MainView(navController: NavHostController) {
 
     }
 
-
     ModalBottomSheetLayout(
         sheetState = modalSheetState,
         sheetShape = RoundedCornerShape(
@@ -192,21 +191,37 @@ fun MainView(navController: NavHostController) {
         //Scaffold MAIN
         Scaffold(
             bottomBar = bottomBar,
+            scaffoldState = scaffoldState,
             topBar = {
                 AppTopBar()
+            },
+            drawerContent = {
+                LazyColumn(Modifier.padding(16.dp)) {
+                    items(screensInDrawer) { item ->
+                        item?.let {
+                            DrawerItem(selected = currentRoute == item.dRoute, item = item) {
+                                scope.launch {
+                                    scaffoldState.drawerState.close()
+                                }
+                                if (item.dRoute == "logout") {
+                                    dialogOpen.value = true
+                                } else {
+                                    navController.navigate(item.dRoute)
+                                    title.value = item.dTitle
+                                }
+                            }
+                        }
+                    }
+                }
             }
-
         ) {
             BottomNavGraph(navController = navController, pd = it)
             LogoutDialog(dialogOpen = dialogOpen)
-
         }
-
-
     }
-
-
 }
+
+
 
 @Composable
 fun DrawerItem(
