@@ -63,6 +63,13 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.7.3"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-storage-ktx")
+
+    implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.5.0")
+
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")

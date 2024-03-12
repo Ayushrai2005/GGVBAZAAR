@@ -55,8 +55,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import ggv.ayush.myapplication.BottomScreens.BottomNavGraph
-import ggv.ayush.myapplication.BottomScreens.Browse
-import ggv.ayush.myapplication.BottomScreens.Home
 import ggv.ayush.myapplication.BottomScreens.Library
 import ggv.ayush.myapplication.DrawerScreens.AccountView
 import ggv.ayush.myapplication.DrawerScreens.LogoutDialog

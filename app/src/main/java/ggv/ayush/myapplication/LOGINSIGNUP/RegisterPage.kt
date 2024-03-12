@@ -40,15 +40,37 @@ import androidx.navigation.NavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
 import ggv.ayush.myapplication.R
 
 
 private lateinit var auth: FirebaseAuth
 @Composable
 fun RegisterPage(navController: NavController) {
+    val context = LocalContext.current
 
     var userEmail by rememberSaveable { mutableStateOf("") }
     var userPassword by rememberSaveable { mutableStateOf("") }
+    var name by rememberSaveable { mutableStateOf("") }
+    var phoneNumber by rememberSaveable { mutableStateOf("") }
+
+    data class User(
+        val userEmail : String = "",
+        val phoneNumber : String = "",
+        val userPassword : String = "",
+        val name : String = ""
+    )
+
+     fun addUserToDatabase(user: User){
+        Firebase.firestore.collection("Users").document(name)
+            .set(user)
+            .addOnSuccessListener {
+                Toast.makeText(context, "User Saved ", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+            }
+    }
+
 
     Box(
         modifier = Modifier
@@ -101,10 +123,10 @@ fun RegisterPage(navController: NavController) {
                     color = MaterialTheme.colorScheme.primary,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                RegisterName()
+                RegisterName(name = name , onNameChange = { name = it})
 
                 Spacer(modifier = Modifier.padding(3.dp))
-                RegisterPhone()
+                RegisterPhone(phoneNumber = phoneNumber , onPhoneChange = {phoneNumber = it})
 
                 Spacer(modifier = Modifier.padding(3.dp))
                 RegisterEmail(userEmail = userEmail, onUserEmailChange = { userEmail = it })
@@ -130,7 +152,10 @@ fun RegisterPage(navController: NavController) {
                     navController = navController,
 
                     userEmail = userEmail,
-                    userPassword = userPassword
+                    userPassword = userPassword,
+                    name = name ,
+                    phoneNumber = phoneNumber ,
+
                 )
 
                 Spacer(modifier = Modifier.padding(10.dp))
@@ -188,7 +213,10 @@ private fun GradientButton(
     navController : NavController,
 
     userEmail: String ,
-    userPassword : String
+    userPassword : String,
+    name : String,
+    phoneNumber : String
+
 ) {
     auth = Firebase.auth
     val context = LocalContext.current
@@ -197,18 +225,26 @@ private fun GradientButton(
             .fillMaxWidth()
             .padding(start = 32.dp, end = 32.dp),
         onClick = {
-            auth.createUserWithEmailAndPassword(userEmail, userPassword)
-                .addOnCompleteListener{ task ->
-                    if (task.isSuccessful) {
-                        // Sign in success, update UI with the signed-in user's information
-                        val user = auth.currentUser
-                        Toast.makeText(context, "Registered Successfully", Toast.LENGTH_SHORT).show()
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Toast.makeText(context, "Registartion failed", Toast.LENGTH_SHORT).show()
+            if (userEmail.isNotEmpty() && userPassword.isNotEmpty()) {
+                auth.createUserWithEmailAndPassword(userEmail, userPassword)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            // Sign in success, update UI with the signed-in user's information
+                            val user = auth.currentUser
+                            Toast.makeText(context, "Registered Successfully", Toast.LENGTH_SHORT)
+                                .show()
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Toast.makeText(context, "Registartion failed", Toast.LENGTH_SHORT)
+                                .show()
 
+                        }
                     }
-                }
+
+            }else{
+                Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+
+            }
         },
 
         contentPadding = PaddingValues(),
@@ -246,13 +282,12 @@ private fun GradientButton(
 //name
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun RegisterName() {
+fun RegisterName(name: String , onNameChange : (String) -> Unit ){
     val keyboardController = LocalSoftwareKeyboardController.current
-    var userName by rememberSaveable { mutableStateOf("") }
 
     OutlinedTextField(
-        value = userName,
-        onValueChange = { userName = it },
+        value = name,
+        onValueChange = { onNameChange(it) },
         shape = RoundedCornerShape(topEnd =12.dp, bottomStart =12.dp),
         label = {
             Text("Name",
@@ -283,13 +318,12 @@ fun RegisterName() {
 //phone
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun RegisterPhone() {
+fun RegisterPhone(phoneNumber: String , onPhoneChange : (String) -> Unit) {
     val keyboardController = LocalSoftwareKeyboardController.current
-    var userPhone by rememberSaveable { mutableStateOf("") }
 
     OutlinedTextField(
-        value = userPhone,
-        onValueChange = { userPhone = it },
+        value = phoneNumber,
+        onValueChange = { onPhoneChange(it) },
         shape = RoundedCornerShape(topEnd =12.dp, bottomStart =12.dp),
         label = {
             Text("Phone",

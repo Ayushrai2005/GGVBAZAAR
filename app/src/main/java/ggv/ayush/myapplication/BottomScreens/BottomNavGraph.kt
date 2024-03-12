@@ -1,5 +1,6 @@
 package ggv.ayush.myapplication.BottomScreens
 
+import Home
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -8,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import ggv.ayush.myapplication.DrawerScreens.AccountView
+import ggv.ayush.myapplication.DrawerScreens.ProductForm
 import ggv.ayush.myapplication.DrawerScreens.Subscription
 import ggv.ayush.myapplication.Screen
 
@@ -21,13 +23,13 @@ fun BottomNavGraph(navController: NavHostController ,pd: PaddingValues){
             Home()
         }
         composable(route =  Screen.BottomScreen.Buy.route){
-            Browse()
+            Home()
         }
         composable(route =  Screen.BottomScreen.Rent.route){
             Library()
         }
         composable(route =  Screen.BottomScreen.Cart.route){
-            Browse()
+            Library()
         }
 
 
@@ -41,7 +43,7 @@ fun BottomNavGraph(navController: NavHostController ,pd: PaddingValues){
         }
 
         composable(Screen.DrawerScreen.SellOrRent.route){
-            Subscription()
+            ProductForm()
         }
 
 

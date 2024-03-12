@@ -1,5 +1,6 @@
 package ggv.ayush.myapplication
 
+import Home
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -10,8 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import ggv.ayush.myapplication.BottomScreens.Browse
-import ggv.ayush.myapplication.BottomScreens.Home
 import ggv.ayush.myapplication.BottomScreens.Library
 import ggv.ayush.myapplication.DrawerScreens.AccountView
 
@@ -52,7 +51,7 @@ fun NavigationGraph() {
             Library()
         }
         composable(Screen.BottomScreen.Cart.bRoute) {
-           Browse()
+            Home()
         }
 
 
