@@ -43,7 +43,12 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import ggv.ayush.myapplication.R
 
-
+data class User(
+    val userEmail : String = "",
+    val phoneNumber : String = "",
+    val userPassword : String = "",
+    val name : String = ""
+)
 private lateinit var auth: FirebaseAuth
 @Composable
 fun RegisterPage(navController: NavController) {
@@ -54,22 +59,9 @@ fun RegisterPage(navController: NavController) {
     var name by rememberSaveable { mutableStateOf("") }
     var phoneNumber by rememberSaveable { mutableStateOf("") }
 
-    data class User(
-        val userEmail : String = "",
-        val phoneNumber : String = "",
-        val userPassword : String = "",
-        val name : String = ""
-    )
 
-     fun addUserToDatabase(user: User){
-        Firebase.firestore.collection("Users").document(name)
-            .set(user)
-            .addOnSuccessListener {
-                Toast.makeText(context, "User Saved ", Toast.LENGTH_SHORT).show()
-            }
-            .addOnFailureListener {
-            }
-    }
+
+
 
 
     Box(
@@ -218,8 +210,17 @@ private fun GradientButton(
     phoneNumber : String
 
 ) {
-    auth = Firebase.auth
     val context = LocalContext.current
+    fun addUserToDatabase(user: User){
+        Firebase.firestore.collection("Users")
+            .add(user)
+            .addOnSuccessListener {
+                Toast.makeText(context, "User Saved ", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+            }
+    }
+    auth = Firebase.auth
     androidx.compose.material3.Button(
         modifier = Modifier
             .fillMaxWidth()
@@ -229,6 +230,9 @@ private fun GradientButton(
                 auth.createUserWithEmailAndPassword(userEmail, userPassword)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
+                            // Inside your composable function
+                            addUserToDatabase(User(userEmail, phoneNumber, userPassword, name))
+
                             // Sign in success, update UI with the signed-in user's information
                             val user = auth.currentUser
                             Toast.makeText(context, "Registered Successfully", Toast.LENGTH_SHORT)

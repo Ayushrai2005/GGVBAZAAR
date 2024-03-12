@@ -11,6 +11,8 @@ import androidx.navigation.compose.composable
 import ggv.ayush.myapplication.DrawerScreens.AccountView
 import ggv.ayush.myapplication.DrawerScreens.ProductForm
 import ggv.ayush.myapplication.DrawerScreens.Subscription
+import ggv.ayush.myapplication.LOGINSIGNUP.LoginPage
+import ggv.ayush.myapplication.MainView
 import ggv.ayush.myapplication.Screen
 
 @Composable
@@ -30,6 +32,13 @@ fun BottomNavGraph(navController: NavHostController ,pd: PaddingValues){
         }
         composable(route =  Screen.BottomScreen.Cart.route){
             Library()
+        }
+
+        composable("login_page", content = { LoginPage(navController = navController) })
+
+
+        composable("Main_View"){
+            MainView(navController = navController)
         }
 
 

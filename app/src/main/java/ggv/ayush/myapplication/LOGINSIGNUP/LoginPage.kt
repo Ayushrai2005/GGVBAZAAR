@@ -49,6 +49,15 @@ private lateinit var auth: FirebaseAuth
 
 @Composable
 fun LoginPage(navController: NavController) {
+    // Check if the user is already logged in
+    val currentUser = Firebase.auth.currentUser
+
+    // If the user is already logged in, navigate to the home page
+    if (currentUser != null) {
+        navController.navigate("Main_View")
+        return
+    }
+
 
     var userName by rememberSaveable { mutableStateOf("") }
     var userPassword by rememberSaveable { mutableStateOf("") }

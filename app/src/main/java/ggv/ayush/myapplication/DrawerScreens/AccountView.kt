@@ -1,85 +1,101 @@
 package ggv.ayush.myapplication.DrawerScreens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
+import ggv.ayush.myapplication.BottomScreens.Lib
+import ggv.ayush.myapplication.LOGINSIGNUP.User
 import ggv.ayush.myapplication.R
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun AccountView() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        // Account information
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Row {
-                Icon(
-                    imageVector = Icons.Default.AccountCircle,
-                    contentDescription = "Account",
-                    modifier = Modifier.padding(end = 8.dp)
-                )
-                Column {
-                    Text("Panjutorials", style = MaterialTheme.typography.h6)
-                    Text(
-                        "@tutorialsEU",
-                        style = MaterialTheme.typography.subtitle1,
-                        color = Color.Gray
-                    )
+    val currentUser = Firebase.auth.currentUser
+    val userUid = currentUser?.uid
+
+    // Remember the user state using remember
+    val user = remember{ mutableStateOf<User?>(null) }
+
+    if (userUid != null && user.value == null) {
+        // Retrieve user data from Firestore only if it hasn't been retrieved yet
+        val userDocumentRef = Firebase.firestore.collection("Users").document(userUid)
+        userDocumentRef.get()
+            .addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    // Document exists, retrieve user data
+                    val userData = documentSnapshot.toObject(User::class.java)
+                    // Update the user state
+                    user.value = userData
+                } else {
+                    // Document does not exist
+                    // Handle the case accordingly
                 }
             }
-            IconButton(onClick = {}) {
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowRight,
-                    contentDescription = null
-                )
+            .addOnFailureListener { exception ->
+                // Handle errors
             }
-        }
+    }
 
-        // Divider
-        Divider(
-            modifier = Modifier.padding(vertical = 16.dp),
-            color = Color.LightGray
-        )
-
-        // My Music section
-        Row(modifier = Modifier.padding(bottom = 16.dp)) {
-            Icon(
-                painter = painterResource(id = R.drawable.baseline_music_video_24),
-                contentDescription = "My Music",
-                modifier = Modifier.padding(end = 8.dp)
+    // Display user information once it's available
+    user.value?.let { userInfo ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // Circular image
+            Image(
+                painter = painterResource(id = R.drawable.avtar), // Replace with your local circular image resource
+                contentDescription = null,
+                modifier = Modifier
+                    .size(120.dp)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             Text(
-                text = "My Music",
-                style = MaterialTheme.typography.body1,
-                modifier = Modifier.padding(top = 4.dp)
+                text = "Name: ${userInfo.name}",
+                style = MaterialTheme.typography.subtitle1
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "Phone Number: ${userInfo.phoneNumber}",
+                style = MaterialTheme.typography.subtitle1
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "Email Address: ${userInfo.userEmail}",
+                style = MaterialTheme.typography.subtitle1
             )
         }
-        Divider(color = Color.LightGray)
-
-        // Add more sections or features as needed...
-
     }
 }

@@ -214,7 +214,7 @@ fun MainView(navController: NavHostController) {
             }
         ) {
             BottomNavGraph(navController = navController, pd = it)
-            LogoutDialog(dialogOpen = dialogOpen)
+            LogoutDialog(dialogOpen = dialogOpen , navController = navController)
         }
     }
 }

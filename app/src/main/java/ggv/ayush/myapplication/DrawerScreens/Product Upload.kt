@@ -24,6 +24,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 
 import java.io.IOException
+import java.util.UUID
 
 @Composable
 fun ProductForm() {
@@ -117,6 +118,7 @@ private fun loadBitmap(contentResolver: ContentResolver, uri: Uri): ImageBitmap 
 
 private fun uploadProduct(name: String, des: String, price: String, imageUri: Uri, context: Context) {
     val storageRef: StorageReference = FirebaseStorage.getInstance().reference.child("images/${name}_${System.currentTimeMillis()}")
+    val productId = UUID.randomUUID().toString() // Generate a unique ID for the product
 
     storageRef.putFile(imageUri)
         .addOnSuccessListener { taskSnapshot ->
@@ -124,13 +126,14 @@ private fun uploadProduct(name: String, des: String, price: String, imageUri: Ur
             taskSnapshot.storage.downloadUrl.addOnSuccessListener { uri ->
                 // Image uploaded successfully, now upload product data to Firestore
                 val product = Product(
+                    productId = productId,
                     productName = name,
                     productDescription = des,
                     productPrice = price,
                     productImage = uri.toString()
                 )
-                Firebase.firestore.collection("Products").document(name)
-                    .set(product)
+                Firebase.firestore.collection("Products")
+                    .add(product)
                     .addOnSuccessListener {
                         Toast.makeText(context, "Product uploaded successfully", Toast.LENGTH_SHORT).show()
                     }
@@ -146,6 +149,7 @@ private fun uploadProduct(name: String, des: String, price: String, imageUri: Ur
 
 
 data class Product (
+    val productId : String = "" ,
     val productName : String = "",
     val productPrice : String = "",
     val productDescription : String = "",
