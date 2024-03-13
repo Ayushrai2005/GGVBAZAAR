@@ -40,6 +40,9 @@ import androidx.navigation.NavController
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.painter.Painter
 
 import coil.transform.RoundedCornersTransformation
@@ -165,20 +168,29 @@ suspend fun downloadImage(url: String): Bitmap? {
 }
 @Composable
 fun DownloadedImage(url: String) {
-    val scope = MainScope()
+    val scope = rememberCoroutineScope()
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
+    var isLoading by remember { mutableStateOf(true) }
 
     LaunchedEffect(url) {
         scope.launch {
             bitmap = downloadImage(url)
+            isLoading = false
         }
     }
 
-    bitmap?.let { loadedBitmap ->
-        Image(bitmap = loadedBitmap.asImageBitmap(), contentDescription = null)
-    } ?: run {
-        // Placeholder image while loading or if download fails
-        Image(painter = painterResource(id = R.drawable.avtar), contentDescription = null)
+    if (isLoading) {
+        // Display circular loader while image is being downloaded
+        CircularProgressIndicator(
+            modifier = Modifier
+                .size(50.dp)
+        )
+    } else {
+        bitmap?.let { loadedBitmap ->
+            Image(bitmap = loadedBitmap.asImageBitmap(), contentDescription = null)
+        } ?: run {
+            // Placeholder image if download fails
+            Image(painter = painterResource(id = R.drawable.avtar), contentDescription = null)
+        }
     }
 }
-

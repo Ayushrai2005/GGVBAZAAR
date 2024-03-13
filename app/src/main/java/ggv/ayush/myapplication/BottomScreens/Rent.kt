@@ -46,7 +46,7 @@ fun ForRent() {
         val result = firestore.collection("Products").get().await()
         for (document in result) {
             val product = document.toObject(Product::class.java)
-            if(product.ForRent == "true"){
+            if(product.forRent == "true"){
                 productList.add(product)
             }
         }

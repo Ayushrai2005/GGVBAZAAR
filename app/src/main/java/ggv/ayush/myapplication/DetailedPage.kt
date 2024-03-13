@@ -17,10 +17,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +30,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -161,6 +164,7 @@ fun DetailPage(productName: String) {
 
 // Function to download an image from URL and convert it into a Bitmap
 suspend fun downloadImage(url: String): Bitmap? {
+
     return withContext(Dispatchers.IO) {
         var bitmap: Bitmap? = null
         var inputStream: InputStream? = null
@@ -183,31 +187,44 @@ suspend fun downloadImage(url: String): Bitmap? {
 }
 @Composable
 fun DownloadedImage(url: String , modifier: Modifier = Modifier) {
-    val scope = MainScope()
+    val scope = rememberCoroutineScope()
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
+    var isLoading by remember { mutableStateOf(true) }
 
     LaunchedEffect(url) {
         scope.launch {
             bitmap = downloadImage(url)
+            isLoading = false
         }
     }
 
-    bitmap?.let { loadedBitmap ->
-        val scaledBitmap = scaleBitmapToSquare(loadedBitmap)
-        Image(
-            bitmap = scaledBitmap.asImageBitmap(),
-            contentDescription = null,
-            modifier = modifier,
-            contentScale = ContentScale.FillBounds // Ensure the image fills the square bounds
-        )    } ?: run {
-        // Placeholder image while loading or if download fails
-        Image(
-            painter = painterResource(id = R.drawable.avtar),
-            contentDescription = null,
-            modifier = modifier,
-            contentScale = ContentScale.FillBounds // Ensure the placeholder fills the square bounds
-        )    }
+    if (isLoading) {
+        // Display circular loader while image is being downloaded
+        CircularProgressIndicator(
+            modifier = Modifier
+                .size(50.dp)
+        )
+    } else {
+        bitmap?.let { loadedBitmap ->
+            val scaledBitmap = scaleBitmapToSquare(loadedBitmap)
+            Image(
+                bitmap = scaledBitmap.asImageBitmap(),
+                contentDescription = null,
+                modifier = modifier,
+                contentScale = ContentScale.FillBounds // Ensure the image fills the square bounds
+            )
+        } ?: run {
+            // Placeholder image if download fails
+            Image(
+                painter = painterResource(id = R.drawable.avtar),
+                contentDescription = null,
+                modifier = modifier,
+                contentScale = ContentScale.FillBounds // Ensure the placeholder fills the square bounds
+            )
+        }
+    }
 }
+
 // Function to scale the bitmap to fit within a square without distortion
 private fun scaleBitmapToSquare(bitmap: Bitmap): Bitmap {
     val size = min(bitmap.width, bitmap.height)

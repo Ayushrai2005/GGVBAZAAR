@@ -147,7 +147,7 @@ private fun uploadProduct(name: String, des: String, ForRent: Boolean , price: S
                 val product = Product(
                     productId = productId,
                     productName = name,
-                    ForRent = ForRent.toString(),
+                    forRent = ForRent.toString(),
                     productDescription = des,
                     productPrice = price,
                     productImage = uri.toString()
@@ -170,7 +170,7 @@ private fun uploadProduct(name: String, des: String, ForRent: Boolean , price: S
 
 data class Product (
     val productId : String = "" ,
-    val ForRent : String = "",
+    val forRent : String = "",
     val productName : String = "",
     val productPrice : String = "",
     val productDescription : String = "",
