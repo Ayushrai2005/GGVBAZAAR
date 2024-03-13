@@ -212,7 +212,7 @@ private fun GradientButton(
 ) {
     val context = LocalContext.current
     fun addUserToDatabase(user: User){
-        Firebase.firestore.collection("Users").document(Firebase.auth.uid.toString())
+        Firebase.firestore.collection("Users").document(userEmail)
             .set(user)
             .addOnSuccessListener {
                 Toast.makeText(context, "User Saved ", Toast.LENGTH_SHORT).show()

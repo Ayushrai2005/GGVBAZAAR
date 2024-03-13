@@ -87,4 +87,20 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    //hilt
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+
+
+    //okhttp3
+    implementation ("com.squareup.okhttp3:okhttp:4.10.0")
+
+    //retrofit
+
+    //pager
+    implementation ("com.google.accompanist:accompanist-pager:0.28.0")
+
+    //constrain layout
+    implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+
 }//Compose Navigation Dependency

@@ -38,12 +38,16 @@ import kotlinx.coroutines.withContext
 import androidx.navigation.NavController
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.graphics.painter.Painter
 
 import coil.transform.RoundedCornersTransformation
 import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 import ggv.ayush.myapplication.DrawerScreens.Product
 import ggv.ayush.myapplication.R
+import ggv.ayush.myapplication.Screen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collect
@@ -54,7 +58,7 @@ import java.net.URL
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Home() {
+fun Home(navController : NavController) {
     var products by remember { mutableStateOf<List<Product>>(emptyList()) }
 
     // Fetch products from Firestore
@@ -68,22 +72,52 @@ fun Home() {
         }
         products = productList
     }
-
-    LazyVerticalGrid(
-        GridCells.Fixed(2),
-        modifier = Modifier.padding(16.dp)
+    Box(
+        modifier = Modifier.fillMaxSize()
     ) {
-        items(products) { product ->
-            ProductCard(product = product)
+        // Background Image
+        BackgroundImage(
+            painter = painterResource(id = R.drawable.img3),
+            contentDescription = "Background Image",
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier.fillMaxSize() // Set the modifier to fill the entire screen
+        )
+
+        LazyVerticalGrid(
+            GridCells.Fixed(2),
+            modifier = Modifier.padding(16.dp)
+        ) {
+            items(products) { product ->
+                ProductCard(product = product) {
+                    navController.navigate("${Screen.ProductDetail.route}/${product.productName}")
+                }
+            }
         }
     }
 }
 
+@Composable
+fun BackgroundImage(
+    painter: Painter,
+    contentDescription: String?,
+    modifier: Modifier = Modifier,
+    contentScale: ContentScale = ContentScale.FillBounds,
+) {
+    Image(
+        painter = painter,
+        contentDescription = contentDescription,
+        modifier = modifier,
+        contentScale = contentScale,
+    )
+}
+
 
 @Composable
-fun ProductCard(product: Product) {
+fun ProductCard(product: Product , onItemClick: (String) -> Unit) {
     Card(
-        modifier = Modifier.padding(8.dp),
+        modifier = Modifier
+            .padding(8.dp)
+            .clickable(onClick = { onItemClick(product.productName) }), // Making the card clickable
         elevation = 16.dp
     ) {
         Column(
@@ -105,10 +139,8 @@ fun ProductCard(product: Product) {
             )
         }
     }
-
-
-
 }
+
 // Function to download an image from URL and convert it into a Bitmap
 suspend fun downloadImage(url: String): Bitmap? {
     return withContext(Dispatchers.IO) {

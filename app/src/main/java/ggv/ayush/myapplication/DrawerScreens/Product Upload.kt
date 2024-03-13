@@ -152,8 +152,8 @@ private fun uploadProduct(name: String, des: String, ForRent: Boolean , price: S
                     productPrice = price,
                     productImage = uri.toString()
                 )
-                Firebase.firestore.collection("Products")
-                    .add(product)
+                Firebase.firestore.collection("Products").document(name)
+                    .set(product)
                     .addOnSuccessListener {
                         Toast.makeText(context, "Product uploaded successfully", Toast.LENGTH_SHORT).show()
                     }

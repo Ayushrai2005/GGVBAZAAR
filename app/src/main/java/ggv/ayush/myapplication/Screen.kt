@@ -33,7 +33,13 @@ sealed class Screen(val title: String, val route: String) {
             R.drawable.baseline_apps_24
         )
 
+
+
     }
+    object ProductDetail : Screen(
+        "Product Detail" ,
+        "productDetail"
+    )
 
     sealed class DrawerScreen(
         val dTitle: String,

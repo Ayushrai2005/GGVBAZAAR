@@ -46,7 +46,7 @@ val dummyOrderItems = listOf(
 )
 
 @Composable
-fun Subscription() {
+fun Orders() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
