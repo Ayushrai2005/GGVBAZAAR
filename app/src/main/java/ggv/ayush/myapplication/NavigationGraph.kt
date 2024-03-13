@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import ggv.ayush.myapplication.BottomScreens.ForRent
 import ggv.ayush.myapplication.BottomScreens.Library
 import ggv.ayush.myapplication.DrawerScreens.AccountView
 
@@ -33,8 +34,6 @@ fun NavigationGraph() {
             MainView(navController = navController)
         }
 
-
-
         //Drawer Items
         composable(Screen.DrawerScreen.Account.route){
             AccountView()
@@ -44,11 +43,9 @@ fun NavigationGraph() {
         composable(Screen.BottomScreen.Home.bRoute) {
             Home()
         }
-        composable(Screen.BottomScreen.Buy.bRoute) {
-            Library()
-        }
+
         composable(Screen.BottomScreen.Rent.bRoute) {
-            Library()
+            ForRent()
         }
         composable(Screen.BottomScreen.Cart.bRoute) {
             Home()

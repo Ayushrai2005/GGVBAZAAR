@@ -24,11 +24,8 @@ fun BottomNavGraph(navController: NavHostController ,pd: PaddingValues){
         composable(route =  Screen.BottomScreen.Home.route){
             Home()
         }
-        composable(route =  Screen.BottomScreen.Buy.route){
-            Home()
-        }
         composable(route =  Screen.BottomScreen.Rent.route){
-            Library()
+            ForRent()
         }
         composable(route =  Screen.BottomScreen.Cart.route){
             Library()

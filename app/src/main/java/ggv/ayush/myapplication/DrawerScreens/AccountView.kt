@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -22,12 +23,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.toObject
 import ggv.ayush.myapplication.BottomScreens.Lib
-import ggv.ayush.myapplication.LOGINSIGNUP.User
 import ggv.ayush.myapplication.R
+import ggv.ayush.myapplication.Repositories.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.tasks.await
 
 @Composable
 fun AccountView() {
@@ -35,40 +39,41 @@ fun AccountView() {
     val userUid = currentUser?.uid
 
     // Remember the user state using remember
-    val user = remember{ mutableStateOf<User?>(null) }
+    val userDataState = remember{ mutableStateOf<User?>(null) }
 
-    if (userUid != null && user.value == null) {
+    // Fetch user data if it hasn't been fetched yet
+    if (userUid != null && userDataState.value == null) {
         // Retrieve user data from Firestore only if it hasn't been retrieved yet
-        val userDocumentRef = Firebase.firestore.collection("Users").document(userUid)
-        userDocumentRef.get()
-            .addOnSuccessListener { documentSnapshot ->
+        val userDocumentRef = Firebase.firestore.collection("Users").document(Firebase.auth.uid.toString())
+        LaunchedEffect(userDocumentRef) {
+            try {
+                val documentSnapshot = userDocumentRef.get().await()
                 if (documentSnapshot.exists()) {
                     // Document exists, retrieve user data
-                    val userData = documentSnapshot.toObject(User::class.java)
+                    val userData = documentSnapshot.toObject<User>()
                     // Update the user state
-                    user.value = userData
+                    userDataState.value = userData
                 } else {
                     // Document does not exist
                     // Handle the case accordingly
                 }
-            }
-            .addOnFailureListener { exception ->
+            } catch (e: Exception) {
                 // Handle errors
             }
+        }
     }
-
     // Display user information once it's available
-    user.value?.let { userInfo ->
+    userDataState.value?.let { userInfo ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
+//            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Circular image
+//             Circular image
             Image(
-                painter = painterResource(id = R.drawable.avtar), // Replace with your local circular image resource
+                painter = painterResource(id = R.drawable.vector1), // Replace with your local circular image resource
                 contentDescription = null,
                 modifier = Modifier
                     .size(120.dp)
@@ -93,7 +98,7 @@ fun AccountView() {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Email Address: ${userInfo.userEmail}",
+                text = "Email Address: ${userInfo.userEmail} ",
                 style = MaterialTheme.typography.subtitle1
             )
         }

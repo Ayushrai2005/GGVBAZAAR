@@ -16,41 +16,87 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Button
+import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+
+import androidx.compose.material.Button
+import androidx.compose.material.Divider
+import androidx.compose.material.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-@Composable
-fun Subscription(){
-    Column(
-        modifier = Modifier.height(200.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        Text(text = "Manage Subscription")
-        Card(modifier = Modifier.padding(8.dp), elevation = 4.dp){
-            Column(modifier = Modifier.padding(8.dp)){
-                Column() {
-                    Text(text = "Musical")
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text(text = "Free Tier")
-                        TextButton(onClick = { /*TODO*/ }) {
-                            Row {
-                                Text(text = "See All Plans")
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                                    contentDescription = "See All Plans"
-                                )
-                            }
-                        }
 
-                    }
-                }
-                Divider(thickness = 1.dp, modifier = Modifier.padding(horizontal = 8.dp))
-                Row(Modifier.padding(vertical = 16.dp)) {
-                    Icon(imageVector = Icons.Default.AccountBox, contentDescription = "Get a Plan")
-                    Text(text = "Get a Plan")
+// Dummy data representing an order item
+data class OrderItem(
+    val name: String,
+    val quantity: Int,
+    val price: Double
+)
+
+// Dummy list of order items
+val dummyOrderItems = listOf(
+    OrderItem("Item 1", 2, 10.99),
+    OrderItem("Item 2", 1, 5.99),
+    OrderItem("Item 3", 3, 8.49)
+)
+
+@Composable
+fun Subscription() {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            Text(
+                text = "Your Order",
+                modifier = Modifier.padding(bottom = 16.dp),
+                style = MaterialTheme.typography.h5
+            )
+
+            // Display order items
+            dummyOrderItems.forEachIndexed { index, orderItem ->
+                OrderItemRow(orderItem = orderItem)
+                if (index < dummyOrderItems.size - 1) {
+                    Divider()
                 }
             }
 
+            // Display total section
+            TotalSection()
         }
     }
-}
+
+    @Composable
+    fun OrderItemRow(orderItem: OrderItem) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = orderItem.name)
+            Text(text = "${orderItem.quantity} x ${orderItem.price}")
+        }
+    }
+
+    @Composable
+    fun TotalSection() {
+        var total = 0.0
+        dummyOrderItems.forEach { orderItem ->
+            total += orderItem.quantity * orderItem.price
+        }
+        Button(
+            onClick = { /* Handle order confirmation */ },
+            modifier = Modifier
+                .padding(top = 16.dp)
+        ) {
+            Text(text = "Total: $${String.format("%.2f", total)}")
+        }
+    }
+

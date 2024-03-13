@@ -2,6 +2,7 @@ package ggv.ayush.myapplication.DrawerScreens
 
 import android.content.ContentResolver
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore
 import android.widget.Toast
@@ -10,9 +11,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
+import androidx.compose.material.Checkbox
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
@@ -36,6 +39,8 @@ fun ProductForm() {
     val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
         selectedImageUri = uri
     }
+    var ForRent by remember { mutableStateOf(false) } // Track whether the product is for rent or sell
+
 
     Column(
         modifier = Modifier
@@ -87,12 +92,25 @@ fun ProductForm() {
             label = { Text("Product Description") },
             modifier = Modifier.fillMaxWidth()
         )
+        // Checkbox for selecting product type (sell or rent)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(
+                checked = ForRent,
+                onCheckedChange = { ForRent = it },
+                modifier = Modifier.padding(end = 8.dp)
+            )
+            Text(text = if (ForRent) "For Rent" else "For Rent")
+        }
+
 
         // Button to upload product data to Firebase
         Button(
             onClick = {
                 if (productName.isNotEmpty() && productPrice.isNotEmpty() && productDescription.isNotEmpty() && selectedImageUri != null) {
-                    uploadProduct(productName, productDescription, productPrice, selectedImageUri!! , context)
+                    uploadProduct(productName, productDescription, ForRent , productPrice, selectedImageUri!! , context)
                 } else {
                     Toast.makeText(context, "Please fill in all fields and select an image", Toast.LENGTH_SHORT).show()
                 }
@@ -109,14 +127,15 @@ fun ProductForm() {
 private fun loadBitmap(contentResolver: ContentResolver, uri: Uri): ImageBitmap {
     return try {
         val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
-        bitmap.asImageBitmap()
+        val resizedBitmap = Bitmap.createScaledBitmap(bitmap, 600, 600, true)
+        resizedBitmap.asImageBitmap()
     } catch (e: IOException) {
         ImageBitmap(1, 1)
     }
 }
 
 
-private fun uploadProduct(name: String, des: String, price: String, imageUri: Uri, context: Context) {
+private fun uploadProduct(name: String, des: String, ForRent: Boolean , price: String, imageUri: Uri, context: Context) {
     val storageRef: StorageReference = FirebaseStorage.getInstance().reference.child("images/${name}_${System.currentTimeMillis()}")
     val productId = UUID.randomUUID().toString() // Generate a unique ID for the product
 
@@ -128,6 +147,7 @@ private fun uploadProduct(name: String, des: String, price: String, imageUri: Ur
                 val product = Product(
                     productId = productId,
                     productName = name,
+                    ForRent = ForRent.toString(),
                     productDescription = des,
                     productPrice = price,
                     productImage = uri.toString()
@@ -150,6 +170,7 @@ private fun uploadProduct(name: String, des: String, price: String, imageUri: Ur
 
 data class Product (
     val productId : String = "" ,
+    val ForRent : String = "",
     val productName : String = "",
     val productPrice : String = "",
     val productDescription : String = "",

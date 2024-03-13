@@ -16,12 +16,6 @@ sealed class Screen(val title: String, val route: String) {
             R.drawable.baseline_home_24
         )
 
-        object Buy : BottomScreen(
-            "Buy",
-            "buy",
-            R.drawable.baseline_home_24
-        )
-
         object Rent : BottomScreen(
             "Rent",
             "rent",
@@ -96,7 +90,6 @@ sealed class Screen(val title: String, val route: String) {
 
     val screensInBottom = listOf(
         Screen.BottomScreen.Home,
-        Screen.BottomScreen.Buy,
         Screen.BottomScreen.Rent,
         Screen.BottomScreen.Cart
         )
