@@ -14,37 +14,6 @@ Features
 
 Technical Details
 
- 
-
- composable(Screen.DrawerScreen.SellOrRent.route){ 
-
- ProductForm() 
-
- } 
-
- 
-
- // Inside your BottomNavGraph composable function 
-
- composable(Screen.ProductDetail.route + "/{productName}") { backStackEntry 
-
--> 
-
- val productName = backStackEntry.arguments?.getString("productName") ?:
-
-"" 
-
- DetailPage(productName) 
-
- } 
-
- 
-
- 
-
- } 
-
-}
 
 1. Product List Pagination Page:
 
