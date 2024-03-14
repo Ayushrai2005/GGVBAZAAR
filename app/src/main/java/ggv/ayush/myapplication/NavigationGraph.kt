@@ -44,7 +44,7 @@ fun NavigationGraph() {
         }
 
         composable(Screen.BottomScreen.Rent.bRoute) {
-            ForRent()
+            ForRent(navController)
         }
         composable(Screen.BottomScreen.Cart.bRoute) {
             Home(navController)

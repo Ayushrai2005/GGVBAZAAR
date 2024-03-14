@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import ggv.ayush.myapplication.DetailPage
+import ggv.ayush.myapplication.DetailedScreen.DetailPage
 import ggv.ayush.myapplication.DrawerScreens.AccountView
 import ggv.ayush.myapplication.DrawerScreens.Orders
 import ggv.ayush.myapplication.DrawerScreens.ProductForm
@@ -26,7 +26,7 @@ fun BottomNavGraph(navController: NavHostController ,pd: PaddingValues){
             Home(navController)
         }
         composable(route =  Screen.BottomScreen.Rent.route){
-            ForRent()
+            ForRent(navController)
         }
         composable(route = Screen.BottomScreen.Cart.route){
             CartScreen()

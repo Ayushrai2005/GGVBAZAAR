@@ -114,7 +114,6 @@ fun MainView(navController: NavHostController) {
                         "Navigation",
                         "Item: ${item.bTitle}, Current Route: $currentRoute, Is Selected: $isSelected"
                     )
-                    val tint = if (isSelected) Color.White else Color.Black
                     BottomNavigationItem(
                         selected = currentRoute == item.bRoute,
                         onClick = {
@@ -122,14 +121,13 @@ fun MainView(navController: NavHostController) {
                             title.value = item.bTitle
                         },
                         icon = {
-
                             Icon(
-                                tint = tint,
+                                tint = if (isSelected) Color.White else Color.Black,
                                 contentDescription = item.bTitle,
                                 painter = painterResource(id = item.icon)
                             )
                         },
-                        label = { Text(text = item.bTitle, color = tint) },
+                        label = { Text(text = item.bTitle, color = if (isSelected) Color.White else Color.Black) },
                         selectedContentColor = Color.White,
                         unselectedContentColor = Color.Black
 

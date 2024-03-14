@@ -142,7 +142,7 @@ fun CartScreen() {
                     Spacer(modifier = Modifier.height(8.dp))
                     Row() {
                         Text(
-                            text = "$79.99",
+                            text = "INR 2000",
                             color = MaterialTheme.colors.PrimaryColor,
                             fontWeight = FontWeight.Bold
                         )
@@ -188,7 +188,7 @@ fun CartScreen() {
                     Spacer(modifier = Modifier.height(8.dp))
                     Row() {
                         Text(
-                            text = "$100.25",
+                            text = "INR 5500",
                             color = MaterialTheme.colors.PrimaryColor,
                             fontWeight = FontWeight.Bold
                         )
@@ -230,7 +230,7 @@ fun CartScreen() {
                     Spacer(modifier = Modifier.height(8.dp))
                     Row() {
                         Text(
-                            text = "$49.99",
+                            text = "INR 6000",
                             color = MaterialTheme.colors.PrimaryColor,
                             fontWeight = FontWeight.Bold
                         )
@@ -272,7 +272,7 @@ fun CartScreen() {
                     Spacer(modifier = Modifier.height(8.dp))
                     Row() {
                         Text(
-                            text = "$36.55",
+                            text = "INR 1800",
                             color = MaterialTheme.colors.PrimaryColor,
                             fontWeight = FontWeight.Bold
                         )

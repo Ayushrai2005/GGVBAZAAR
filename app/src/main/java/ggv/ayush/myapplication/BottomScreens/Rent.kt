@@ -1,29 +1,39 @@
 package ggv.ayush.myapplication.BottomScreens
 
+import BackgroundImage
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.google.firebase.firestore.FirebaseFirestore
 import ggv.ayush.myapplication.DrawerScreens.Product
 import ggv.ayush.myapplication.R
+import ggv.ayush.myapplication.Screen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -36,7 +46,7 @@ import java.net.URL
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ForRent() {
+fun ForRent(navController: NavController) {
     var products by remember { mutableStateOf<List<Product>>(emptyList()) }
 
     // Fetch products from Firestore
@@ -53,22 +63,37 @@ fun ForRent() {
         products = productList
     }
 
-
-    LazyVerticalGrid(
-        GridCells.Fixed(2),
-        modifier = Modifier.padding(16.dp)
+    Box(
+        modifier = Modifier.fillMaxSize()
     ) {
-        items(products) { product ->
-            ProductCard(product = product)
+        // Background Image
+        BackgroundImage(
+            painter = painterResource(id = R.drawable.img3),
+            contentDescription = "Background Image",
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier.fillMaxSize() // Set the modifier to fill the entire screen
+        )
+        LazyVerticalGrid(
+            GridCells.Fixed(2),
+            modifier = Modifier.padding(16.dp)
+        ) {
+            items(products) { product ->
+                ProductCard(product = product) {
+                    navController.navigate("${Screen.ProductDetail.route}/${product.productName}")
+                }
+            }
         }
     }
 }
 
 
+
 @Composable
-fun ProductCard(product: Product) {
+fun ProductCard(product: Product, onItemClick: (String) -> Unit) {
     Card(
-        modifier = Modifier.padding(8.dp),
+        modifier = Modifier
+            .padding(8.dp)
+            .clickable(onClick = { onItemClick(product.productName) }), // Making the card clickable
         elevation = 16.dp
     ) {
         Column(
@@ -90,10 +115,8 @@ fun ProductCard(product: Product) {
             )
         }
     }
-
-
-
 }
+
 // Function to download an image from URL and convert it into a Bitmap
 suspend fun downloadImage(url: String): Bitmap? {
     return withContext(Dispatchers.IO) {
@@ -118,19 +141,29 @@ suspend fun downloadImage(url: String): Bitmap? {
 }
 @Composable
 fun DownloadedImage(url: String) {
-    val scope = MainScope()
+    val scope = rememberCoroutineScope()
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
+    var isLoading by remember { mutableStateOf(true) }
 
     LaunchedEffect(url) {
         scope.launch {
             bitmap = downloadImage(url)
+            isLoading = false
         }
     }
 
-    bitmap?.let { loadedBitmap ->
-        Image(bitmap = loadedBitmap.asImageBitmap(), contentDescription = null)
-    } ?: run {
-        // Placeholder image while loading or if download fails
-        Image(painter = painterResource(id = R.drawable.avtar), contentDescription = null)
+    if (isLoading) {
+        // Display circular loader while image is being downloaded
+        CircularProgressIndicator(
+            modifier = Modifier
+                .size(50.dp)
+        )
+    } else {
+        bitmap?.let { loadedBitmap ->
+            Image(bitmap = loadedBitmap.asImageBitmap(), contentDescription = null)
+        } ?: run {
+            // Placeholder image if download fails
+            Image(painter = painterResource(id = R.drawable.avtar), contentDescription = null)
+        }
     }
 }

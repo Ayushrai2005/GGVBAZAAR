@@ -1,10 +1,10 @@
-package ggv.ayush.myapplication
+package ggv.ayush.myapplication.DetailedScreen
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Rect
-import android.view.ViewGroup
-import android.widget.ImageView
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,10 +19,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,7 +38,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -44,14 +46,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
-import coil.compose.rememberImagePainter
-import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 import ggv.ayush.myapplication.DrawerScreens.Product
+import ggv.ayush.myapplication.R
 import ggv.ayush.myapplication.ui.theme.PrimaryColor
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -77,90 +76,104 @@ fun DetailPage(productName: String) {
         products = productDocument.toObject(Product::class.java)
     }
 
-
     // Render UI based on product details
     products?.let { product ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().padding(16.dp)
         ) {
             // Product image
-            DownloadedImage(
-                url = product.productImage,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f) // Set aspect ratio to maintain square shape
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Product title
-            Text(
-                text = product.productName,
-                fontStyle = FontStyle.Italic,
-                color = Color.Black,
-                fontSize = 20.sp, // Adjust the font size as needed
-                modifier = Modifier.fillMaxWidth()
-            )
-
-
-            Spacer(modifier = Modifier.height(14.dp))
-
-            // Product price
-            Text(
-                text = "Price: Rs ${product.productPrice}",
-                color = Color.Black,
-                fontSize = 20.sp, // Adjust the font size as needed
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Product description
-            Text(
-                text = product.productDescription,
-                style = MaterialTheme.typography.bodyLarge,
-                fontSize = 18.sp, // Adjust the font size as needed
-                color = Color.Gray ,
-                modifier = Modifier.fillMaxWidth()
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .background(
-                        Color.White,
-                        shape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp)
-                    )
-                    .clip(RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp)),
-                contentAlignment = Alignment.Center
-            ) {
-                Button(
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = androidx.compose.material.MaterialTheme.colors.PrimaryColor,
-                        contentColor = Color.White
-                    ),
+            item {
+                DownloadedImage(
+                    url = product.productImage,
                     modifier = Modifier
-                        .width(200.dp)
-                        .padding(top = 30.dp, bottom = 30.dp)
-                        .height(60.dp)
-                        .clip(RoundedCornerShape(15.dp)),
-                    onClick = {
-                        Toast.makeText(
-                            context,
-                            "Successfully added to cart",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        .fillMaxWidth()
+                        .aspectRatio(1f) // Set aspect ratio to maintain square shape
+                )
+                Spacer(modifier = Modifier.height(16.dp))
 
-                    },
+                // Product title
+                Text(
+                    text = product.productName,
+                    fontStyle = FontStyle.Italic,
+                    color = Color.Black,
+                    fontSize = 20.sp, // Adjust the font size as needed
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(14.dp))
+
+                // Product price
+                Text(
+                    text = "Price: Rs ${product.productPrice}",
+                    color = Color.Black,
+                    fontSize = 20.sp, // Adjust the font size as needed
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Product description
+                Text(
+                    text = product.productDescription,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontSize = 18.sp, // Adjust the font size as needed
+                    color = Color.Gray ,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .background(
+                            Color.White,
+                            shape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp)
+                        )
+                        .clip(RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp)),
+                    contentAlignment = Alignment.Center
                 ) {
-                    androidx.compose.material.Text(text = "Add to Cart", fontSize = 16.sp)
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = androidx.compose.material.MaterialTheme.colors.PrimaryColor,
+                            contentColor = Color.White
+                        ),
+                        modifier = Modifier
+                            .width(200.dp)
+                            .padding(top = 30.dp, bottom = 30.dp)
+                            .height(60.dp)
+                            .clip(RoundedCornerShape(15.dp)),
+                        onClick = {
+                            Toast.makeText(
+                                context,
+                                "Successfully added to cart",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                        },
+                    ) {
+                        androidx.compose.material.Text(text = "Add to Cart", fontSize = 16.sp)
+                    }
+
+                }
+                IconButton(
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_DIAL)
+                        intent.data = Uri.parse("tel:+916264450423")
+                        context.startActivity(intent)
+                    },
+                    modifier = Modifier
+                        .size(48.dp)
+                        .padding(8.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_call),
+                        contentDescription = "Caller Icon"
+                    )
                 }
             }
         }
-
     }
 }
+
 
 // Function to download an image from URL and convert it into a Bitmap
 suspend fun downloadImage(url: String): Bitmap? {

@@ -10,21 +10,38 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.Checkbox
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import ggv.ayush.myapplication.LOGINSIGNUP.Visibility
+import ggv.ayush.myapplication.LOGINSIGNUP.VisibilityOff
 
 import java.io.IOException
 import java.util.UUID
@@ -69,29 +86,12 @@ fun ProductForm() {
         }
 
         // Text field for product title
-        TextField(
-            value = productName,
-            onValueChange = { productName = it },
-            label = { Text("Product Title") },
-            modifier = Modifier.fillMaxWidth()
-        )
+        productNameTextFieldSample(productName = productName , onNameChange = {productName= it})
 
-        // Text field for product price
-        TextField(
-            value = productPrice,
-            onValueChange = { productPrice = it },
-            label = { Text("Product Price") },
-            modifier = Modifier.fillMaxWidth()
-        )
+        productPriceTextFieldSample(productPrice = productPrice , onPriceChange = {productPrice = it})
 
+        productDescriptionTextFieldSample(productDescription = productDescription , onDescriptionChange =  {productDescription = it})
 
-        // Text field for product description
-        TextField(
-            value = productDescription,
-            onValueChange = { productDescription = it },
-            label = { Text("Product Description") },
-            modifier = Modifier.fillMaxWidth()
-        )
         // Checkbox for selecting product type (sell or rent)
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -176,3 +176,101 @@ data class Product (
     val productDescription : String = "",
     val  productImage : String = ""
 )
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun productNameTextFieldSample(productName: String, onNameChange: (String) -> Unit) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    OutlinedTextField(
+        value = productName,
+        onValueChange = { onNameChange(it) },
+        shape = RoundedCornerShape(topEnd =12.dp, bottomStart =12.dp),
+        label = {
+            Text(" Product Title",
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.labelMedium,
+            ) },
+        placeholder = { Text(text = "Product Title") },
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Next,
+            keyboardType = KeyboardType.Email
+        ),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.primary),
+        singleLine = true,
+        modifier = Modifier.fillMaxWidth(0.8f),
+        keyboardActions = KeyboardActions(
+            onDone = {
+                keyboardController?.hide()
+                // do something here
+            }
+        )
+
+    )
+}@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun productPriceTextFieldSample(productPrice: String, onPriceChange: (String) -> Unit) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    OutlinedTextField(
+        value = productPrice,
+        onValueChange = { onPriceChange(it) },
+        shape = RoundedCornerShape(topEnd =12.dp, bottomStart =12.dp),
+        label = {
+            Text("Enter Price / Rent for 1 Week",
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.labelMedium,
+            ) },
+        placeholder = { Text(text = "Enter Price / Rent for 1 Week") },
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Next,
+            keyboardType = KeyboardType.Email
+        ),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.primary),
+        singleLine = true,
+        modifier = Modifier.fillMaxWidth(0.8f),
+        keyboardActions = KeyboardActions(
+            onDone = {
+                keyboardController?.hide()
+                // do something here
+            }
+        )
+
+    )
+}@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun productDescriptionTextFieldSample(productDescription: String, onDescriptionChange: (String) -> Unit) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    OutlinedTextField(
+        value = productDescription,
+        onValueChange = { onDescriptionChange(it) },
+        shape = RoundedCornerShape(topEnd =12.dp, bottomStart =12.dp),
+        label = {
+            Text("Product Description",
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.labelMedium,
+            ) },
+        placeholder = { Text(text = "Product Description") },
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Next,
+            keyboardType = KeyboardType.Email
+        ),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.primary),
+        singleLine = true,
+        modifier = Modifier.fillMaxWidth(0.8f),
+        keyboardActions = KeyboardActions(
+            onDone = {
+                keyboardController?.hide()
+                // do something here
+            }
+        )
+
+    )
+}
